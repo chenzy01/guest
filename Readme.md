@@ -32,7 +32,7 @@ guest/manage.py : 一个命令行工具，通过 命令  python manage.py 可以
 G:\Python\guest>python mangage.py startapp sign
 
 在 Terminal 中使用以上命令创建 sign 应用后，会自动生成一些文件（templates 目录不是自动生成），如下面目录结构：
-
+![image](https://github.com/chenzy01/guest/blob/master/image/%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8.png)
 
 
 目录文件说明：
