@@ -23,4 +23,6 @@ from sign import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index), #添加index/ 路径配置
+    path('login_action/', views.login_action), #指定表单提交的路径
+    path('event_manage/', views.event_manage), #发布会管理页面
 ]
