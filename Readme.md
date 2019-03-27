@@ -1,13 +1,11 @@
 ## 第一个Django demo
-> ### 平台：Pycharm Django
+### 平台：Pycharm Django
 
 使用 Pycharm 进行开发，需要提前在 Pycharm 中（File > Settings > Project: Python > Project Interpreter）下载 Django ，安装过程会自动把 Django 路径加载到系统的环境变量中。
 
 进入 cmd 查询 Django 是否安装成功。出现以下一系列命令，说明已安装成功。
 ![image](https://github.com/chenzy01/guest/blob/master/image/%E6%9F%A5%E7%9C%8BDjango%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F.png)
 
-
- 
 
 创建第一个项目 guest ，可在 Pycharm 的 Terminal 中使用命令行创建
 
