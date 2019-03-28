@@ -60,7 +60,8 @@ PS: Django 在 settings.py 中默认开启 DEBUG = True，若改为 False ，则
 
 templates/index.html 文件
 
-简述 Django 工作流（以默认访问的地址为例）：
+#### 简述 Django 工作流 
+（以默认访问的地址为例）：
 
 向浏览器发送一个请求，如 http://127.0.0.1:8000/index/ ，Django 默认在127.0.0.1地址，端口8000 上进行监听，根据 URL 的路径 /index/，
 
@@ -82,3 +83,95 @@ def index(request):
 ```
 
 该函数使用 render 模板，返回一个已经写好的 HTML 页面。该模板放在 templates 目录下，使用render() 函数进行调用，浏览器最终呈现 index.html 页面的内容（返回响应）。
+
+
+
+#### 各模块要点
+
+#### Django MTV 开发模式
+
+M(Models): 代表模型，进行数据存取。处理与数据相关的事物，既如何存取，如何验证有效。
+
+T(Template): 代表模板，表现层。处理如何展示相关页面或其它类型文档。
+
+V(View): 代表视图，业务逻辑层。处理如何存取模型及调用恰当的模板展现数据，可看做是模型与模板之间的桥梁。
+
+#### URLconf模块  urls.py
+
+1、URLconf 模块包含了 URL 模式（简单的正则表达式）到视图函数（views.py）的简单映射。URLconf的值通过 ROOT_URLCONF 进行设置，
+在 /settings.py 中  
+'''python
+ROOT_URLCONF = 'guest.urls'
+'''
+Django 会加载 urls.py 文件，并在 urlpatterns 中依次匹配每个 URL 模式，匹配到就指向对应的视图函数处理。
+
+
+#### views.py 
+
+1、 index() 视图函数，接受 Web 请求并且返回 Web 响应
+
+2、 login_action(request) 处理登录请求,客户端发送的请求信息都包含在 request 中。request.POST 通过 .get() 方法获取“username”和“password”所获取的用户名和密码
+
+3、 HttpResponseRedirect() 对路径进行重定向，将登录成功后的请求指向了 /event_manage/ 目录
+
+4、 render()方法：render(request, template_name, context=None, content_type=None, status=None, using=None)  
+作用：把 context（一个给定的上下文字典）的内容, 加载进 templates（一个给定的模板）中定义的文件, 并通过浏览器渲染呈现.
+参数讲解:
+request: 是一个固定参数.
+
+template_name: templates 目录下定义的文件, 要注意路径名. 比如'templates\polls\index.html', 参数就要写‘polls\index.html’
+
+context: 要传入文件中用于渲染呈现的数据, 默认是字典格式
+
+content_type: 生成的文档要使用的MIME 类型。默认为DEFAULT_CONTENT_TYPE 设置的值。
+
+status: http的响应代码,默认是200.
+
+using: 用于加载模板使用的模板引擎的名称。
+
+5、auth.authenticate() 方法，用于登录认证。它接受两个参数，用户名 username 和 密码 password ，并在用户名和密码正确的情况下返回一个 User 对象。 否则 authenticate() 返回None。
+
+6、auth.login() 方法，用于用户登录。该函数接受一个 HttpRequest 对象和一个 User 对象作为参数并使用Django的会话（session）框架把用户的ID保存在该会话中。
+
+7、user.is_active 判断用户名和密码是否有效。
+
+8、 @login_required 此装饰器显限制某个视图函数必须登录才能访问，默认跳转的 URL 中会包含“/accounts/login/”，需要在 urls.py 中添加新的路径配置。
+
+#### templates 模板
+
+1、使用模板动态的生成 HTML
+
+2、简单了解两个方法：GET 和 POST  
+GET: 从指定的资源请求数据，一般用于查询数据；  
+POST: 向指定的资源提交要被处理的数据，一般用于更新数据，提交表单。
+
+3、GET 方法将用户提交的数据添加到 URL 中，路径后面跟问号 “？”，用于区分路径和参数（问号后面是参数），多个参数之间用“&”隔开。
+
+4、 index.html 中{% csrf_token %},是CSRF令牌（跨站请求伪造），通过该令牌判断POST请求是否来自同一个网站
+
+5、 form 表单中的 action="/login_action" 指定了提交的路径，根据该路径去 urls.py 中匹配 URL 模式，再去 views.py 中执行相应的视图。
+
+
+#### 其它
+
+1、创建 django_session 表,存放用户 sessionid 对应的信息  
+   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时生成 auth_user 表
+   
+2、Django 自带 Admin 管理后台，创建登录 Admin 后台的管理员账号  
+   命令：\guest> python manage.py createusperuser   
+   Admin 管理后台登录地址： http:127.0.0.1:8000/admin/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
