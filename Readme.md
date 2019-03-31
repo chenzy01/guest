@@ -1,5 +1,6 @@
 ## 第一个Django demo
 ### 平台：Pycharm Django
+***
 
 使用 Pycharm 进行开发，需要提前在 Pycharm 中（File > Settings > Project: Python > Project Interpreter）下载 Django ，安装过程会自动把 Django 路径加载到系统的环境变量中。
 
@@ -179,7 +180,7 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 3、类 Meta 的作用：  
 
 模型元数据是“任何不是字段的数据”，比如排序选项（ordering），数据库表名（db_table）或者人类可读的单复数名称（verbose_name 和verbose_name_plural）。在模型中添加class Meta是完全可选的，所有选项都不是必须的。  
-更多 Django 元数据选项 ![Django Meta]https://docs.djangoproject.com/en/2.1/ref/models/options/
+更多 Django 元数据选项 ![Django Meta](https://docs.djangoproject.com/en/2.1/ref/models/options/)
 
 
 #### 其它
