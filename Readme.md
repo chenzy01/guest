@@ -180,15 +180,49 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 3、类 Meta 的作用：  
 
 模型元数据是“任何不是字段的数据”，比如排序选项（ordering），数据库表名（db_table）或者人类可读的单复数名称（verbose_name 和verbose_name_plural）。在模型中添加class Meta是完全可选的，所有选项都不是必须的。  
-更多 Django 元数据选项 ![Django Meta](https://docs.djangoproject.com/en/2.1/ref/models/options/)
+更多 Django 元数据选项 ![Django Meta](https://docs.djangoproject.com/en/2.1/ref/models/options/)  
+
+4、makemigrations 与 migrate 命令的作用  
+在 models.py 中设计好模型后，需要将模型中的各个属性（或改动）映射到数据库中，首先通过 makemigrations 命令操作  
+`\guest> python manage.py makemigrations sign`  
+相当于在该 sign 应用中的 migrations 目录，记录了所有的关于 modes.py 的改动（比如添加字段，删除模型等），会自动生成 0001_initial.py 记录操作， 但是这个改动还没有作用到数据库文件  
+`\guest> python manage.py migrate`    
+将对模型的改动作用到数据库文件，比如产生 table ，修改字段的类型等  
+
+
+
+#### Django shell
+
+1、进入 Django shell 模式  
+`\guest> python manage.py shell`  
+在 Ipython 模式下编辑  
+
+2、获得某个 table 中的所有对象  
+```python
+In [3]: Event.objects.all()
+Out[3]: <QuerySet [<Event: 荣耀发布会>]>
+
+In [4]: Guest.objects.all()
+Out[4]: <QuerySet []>  
+```  
+
+2、插入数据的两种方式  
+```python
+In [7]: e1 = Event(id=2, name='红米发布会', limit=20, status=True, address='北京', start_time=datetime(2016,8,10,14,0,0))
+   ...: e1.save()
+```  
+```python
+Event.objects.create(id=1, name='荣耀发布会', limit=200, status=True, address='深圳会展中心', start_time=datetime(2018,9,22,14,0,0))
+```
+
 
 
 #### 其它
 
 1、创建 django_session 表,存放用户 sessionid 对应的信息  
-   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时生成 auth_user 表
+   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时生成 auth_user 表  
    
-2、Django 自带 Admin 管理后台，创建登录 Admin 后台的管理员账号  
+2、Django 自带 Admin 管理后台，创建登录 Admin 后台的超级管理员账号  
    命令：\guest> python manage.py createusperuser   
    Admin 管理后台登录地址： http:127.0.0.1:8000/admin/  
 
