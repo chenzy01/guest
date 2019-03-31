@@ -1,5 +1,6 @@
 ## 第一个Django demo
 ### 平台：Pycharm Django
+***
 
 使用 Pycharm 进行开发，需要提前在 Pycharm 中（File > Settings > Project: Python > Project Interpreter）下载 Django ，安装过程会自动把 Django 路径加载到系统的环境变量中。
 
@@ -29,8 +30,22 @@ guest/manage.py : 一个命令行工具，通过 命令  python manage.py 可以
 
 G:\Python\guest>python mangage.py startapp sign
 
-在 Terminal 中使用以上命令创建 sign 应用后，会自动生成一些文件（templates 目录不是自动生成），如下面目录结构：
-![image](https://github.com/chenzy01/guest/blob/master/image/%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8.png)
+在 Terminal 中使用以上命令创建 sign 应用（模块）后，会自动生成一些文件（templates 目录不是自动生成），如下面目录结构：
+![image](https://github.com/chenzy01/guest/blob/master/image/%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%BA%94%E7%94%A8.png)  
+
+创建完 sign 模块后，需要将 sign 添加到 settings.py 中的 INSTALLED_APPS 中，告诉 Django 有这么一个应用
+
+'''python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'sign',
+]
+'''
 
 
 #### 目录文件说明：
@@ -147,19 +162,111 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 
 3、GET 方法将用户提交的数据添加到 URL 中，路径后面跟问号 “？”，用于区分路径和参数（问号后面是参数），多个参数之间用“&”隔开。
 
-4、 index.html 中{% csrf_token %},是CSRF令牌（跨站请求伪造），通过该令牌判断POST请求是否来自同一个网站
+4、 index.html 中{% csrf_token %},是CSRF令牌（跨站请求伪造），通过该令牌判断POST请求是否来自同一个网站，防止伪装提交请求的功能。
 
 5、 form 表单中的 action="/login_action" 指定了提交的路径，根据该路径去 urls.py 中匹配 URL 模式，再去 views.py 中执行相应的视图。
+
+
+#### models.py  
+
+1、模型基础知识  
+· 每一个 model 都是 Python 类，都要继承 django.db.models.Model 类
+· 模型的每个属性表示数据库的表字段
+· Django 把这一些已经给了一个自动生成的访问数据库的 API
+· 创建模型时，后台会在数据库自动生成一个 id 作为主键，这个主键可以被覆盖
+
+2、__str__()是被 print 函数调用的，__str__()返回的内容以字符串形式输出,该方法告诉 Python 如何将对象以 str 的方式显示出来。
+
+3、类 Meta 的作用：  
+
+模型元数据是“任何不是字段的数据”，比如排序选项（ordering），数据库表名（db_table）或者人类可读的单复数名称（verbose_name 和verbose_name_plural）。在模型中添加class Meta是完全可选的，所有选项都不是必须的。  
+更多 Django 元数据选项 ![Django Meta](https://docs.djangoproject.com/en/2.1/ref/models/options/)  
+
+4、makemigrations 与 migrate 命令的作用  
+在 models.py 中设计好模型后，需要将模型中的各个属性（或改动）映射到数据库中，首先通过 makemigrations 命令操作  
+`\guest> python manage.py makemigrations sign`  
+相当于在该 sign 应用中的 migrations 目录，记录了所有的关于 modes.py 的改动（比如添加字段，删除模型等），会自动生成 0001_initial.py 记录操作， 但是这个改动还没有作用到数据库文件  
+`\guest> python manage.py migrate`    
+将对模型的改动作用到数据库文件，比如产生 table ，修改字段的类型等  
+
+
+
+#### Django shell
+
+1、进入 Django shell 模式  
+`\guest> python manage.py shell`  
+在 Ipython 模式下编辑  
+
+2、获得某个 table 中的所有对象  
+table.objects.all()  
+```python
+In [3]: Event.objects.all()
+Out[3]: <QuerySet [<Event: 荣耀发布会>]>
+
+In [4]: Guest.objects.all()
+Out[4]: <QuerySet []>  
+```  
+
+2、插入数据的两种方式  
+```python
+In [7]: e1 = Event(id=2, name='红米发布会', limit=20, status=True, address='北京', start_time=datetime(2016,8,10,14,0,0))
+   ...: e1.save()
+```  
+```python
+Event.objects.create(id=1, name='荣耀发布会', limit=200, status=True, address='深圳会展中心', start_time=datetime(2018,9,22,14,0,0))
+```
+
+3、查询数据  
+table.objects.get() 
+```python
+In [14]: e1 = Event.objects.get(name='红米 MAX 发布会')
+In [15]: e1
+Out[15]: <Event: 红米 MAX 发布会>
+In [16]: e1.address
+Out[16]: '北京会展中心'
+```
+
+4、过滤数据  
+table.objects.filter()  相当于 SQL 语句中的 LIKE 语句   
+```python
+In [18]: e2 = Event.objects.filter (name__contains='发布会')
+In [19]: e2
+Out[19]: <QuerySet [<Event: 荣耀发布会>, <Event: 红米发布会>, <Event: 红米 MAX 发布会>]>
+```
+
+5、删除数据  
+table.objects.get().delete()  
+```python
+In [20]: Guest.objects.get(phone='13423454334').delete()
+Out[20]: (1, {'sign.Guest': 1})
+```
+
+6、更新数据  
+```python
+In [21]: g3 = Guest.objects.get(phone='13012345690')
+In [22]: g3.realname = 'andy2'
+In [23]: g3.save()
+```
+```python
+In [24]: Guest.objects.select_for_update().filter(phone='13012345690').update(realname='andy')
+Out[24]: 1
+```
+
+
 
 
 #### 其它
 
 1、创建 django_session 表,存放用户 sessionid 对应的信息  
-   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时生成 auth_user 表
+   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时生成 auth_user 表  
    
-2、Django 自带 Admin 管理后台，创建登录 Admin 后台的管理员账号  
+2、Django 自带 Admin 管理后台，创建登录 Admin 后台的超级管理员账号  
    命令：\guest> python manage.py createusperuser   
-   Admin 管理后台登录地址： http:127.0.0.1:8000/admin/
+   Admin 管理后台登录地址： http:127.0.0.1:8000/admin/  
+
+
+   
+ 
 
 
 
