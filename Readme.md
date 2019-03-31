@@ -198,6 +198,7 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 在 Ipython 模式下编辑  
 
 2、获得某个 table 中的所有对象  
+table.objects.all()  
 ```python
 In [3]: Event.objects.all()
 Out[3]: <QuerySet [<Event: 荣耀发布会>]>
@@ -214,6 +215,43 @@ In [7]: e1 = Event(id=2, name='红米发布会', limit=20, status=True, address=
 ```python
 Event.objects.create(id=1, name='荣耀发布会', limit=200, status=True, address='深圳会展中心', start_time=datetime(2018,9,22,14,0,0))
 ```
+
+3、查询数据  
+table.objects.get() 
+```python
+In [14]: e1 = Event.objects.get(name='红米 MAX 发布会')
+In [15]: e1
+Out[15]: <Event: 红米 MAX 发布会>
+In [16]: e1.address
+Out[16]: '北京会展中心'
+```
+
+4、过滤数据  
+table.objects.filter()  相当于 SQL 语句中的 LIKE 语句   
+```python
+In [18]: e2 = Event.objects.filter (name__contains='发布会')
+In [19]: e2
+Out[19]: <QuerySet [<Event: 荣耀发布会>, <Event: 红米发布会>, <Event: 红米 MAX 发布会>]>
+```
+
+5、删除数据  
+table.objects.get().delete()  
+```python
+In [20]: Guest.objects.get(phone='13423454334').delete()
+Out[20]: (1, {'sign.Guest': 1})
+```
+
+6、更新数据  
+```python
+In [21]: g3 = Guest.objects.get(phone='13012345690')
+In [22]: g3.realname = 'andy2'
+In [23]: g3.save()
+```
+```python
+In [24]: Guest.objects.select_for_update().filter(phone='13012345690').update(realname='andy')
+Out[24]: 1
+```
+
 
 
 
