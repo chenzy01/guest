@@ -25,5 +25,8 @@ urlpatterns = [
     path('index/', views.index), #添加index/ 路径配置
     path('login_action/', views.login_action), #指定表单提交的路径
     path('event_manage/', views.event_manage), #发布会管理页面
-    path('accounts/login/', views.index), #
+    path('accounts/login/', views.index),      #登录
+    path('search_name/', views.search_name),   #发布会名称搜索
+    path('search_phone/', views.search_phone),  #嘉宾手机号搜索
+    path('guest_manage/', views.guest_manage), #嘉宾
 ]

@@ -5,10 +5,10 @@
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     <!-- meta charset="UTF-8" -->
-    <title>Event Manage</title>
+    <title>Guest Manage</title>
 </head>
 
-<body role="document">
+<body>
   <!-- 导航栏 -->
   <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -17,8 +17,8 @@
           </div>
           <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
-                  <li class="active"><a href="#">发布会</a> </li>
-                  <li><a href="/guest_manage/">嘉宾</a> </li>
+                  <li><a href="/event_manage/">发布会</a> </li>
+                  <li class="active"><a href="#">嘉宾</a> </li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
                   <li><a href="#">{{ user }}</a> </li>
@@ -31,16 +31,16 @@
   <!-- 发布会搜索表单 -->
   <div class="page-header" style="padding-top: 60px;">
       <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form" method="get" aciton="/search_name/">
+          <form class="navbar-form" method="get" aciton="/search_phone/">
               <div class="form-group">
-                  <input name="name" type="text" placeholder="名称" class="form-control">
+                  <input name="phone" type="text" placeholder="手机号" class="form-control">
               </div>
               <button type="submit" class="btn btn-success">搜索</button>
           </form>
       </div>
   </div>
 
-  <!-- 发布会列表 -->
+  <!-- 嘉宾列表 -->
   <div class="row" style="padding-top: 80px;">
       <div class="col-md-6">
           <table class="table table-stripde">
@@ -48,21 +48,23 @@
                 <tr>
                   <th>id</th>
                   <th>名称</th>
-                  <th>状态</th>
-                  <th>地址</th>
-                  <th>时间</th>
+                  <th>手机</th>
+                  <th>Email</th>
+                  <th>签到</th>
+                  <th>发布会</th>
                   <!--th style="width: 45px;">签到</th -->
                   <!-- th>签到正式</th -->
                 </tr>
               </thead>
               <tbody>
-                {% for event in events %}
+                {% for guest in guests %}
                   <tr>
-                      <td>{{ event.id }}</td>
-                      <td>{{ event.name }}</td>
-                      <td>{{ event.status }}</td>
-                      <td>{{ event.address }}</td>
-                      <td>{{ event.start_time }}</td>
+                      <td>{{ guest.id }}</td>
+                      <td>{{ guest.realname }}</td>
+                      <td>{{ guest.phone }}</td>
+                      <td>{{ guest.email }}</td>
+                      <td>{{ guest.sign }}</td>
+                      <td>{{ guest.event }}</td>
                       <!-- td><a href="/sign_index/{{ event.id }}/"  target="{{ event.id }}_blank">sign</a></td -->
                       <!-- td><a href="/sign_index2/{{ event.id }}/"  target="{{ event.id }}_blank">sign_web</a></td -->
                   </tr>
