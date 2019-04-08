@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from sign.models import Event, Guest
 
@@ -48,17 +49,43 @@ def search_name(request):
 #嘉宾管理
 @login_required
 def guest_manage(request):
-    username = request.session.get('user', '')
-    guest_list = Guest.objects.all()
-    return render(request, 'guest_manage.html', {"user":username, "guests": guest_list})
+    username = request.session.get('username', '')
+    guest_list = Guest.objects.all().order_by('id')
+
+    paginator = Paginator(guest_list, 2)
+    # get 请求获取当前要显示第几页数据
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        #page 若不是整数，取第一页面数据
+        contacts = paginator.page(1)
+    except EmptyPage:
+        #若 page 不在范围内，取最后一页面
+        page = paginator.page(paginator.num_pages)
+    return render(request, 'guest_manage.html', {"user":username, "guests": contacts})
 
 #嘉宾电话搜索
 @login_required
 def search_phone(request):
-    username = request.session.get('user', '')
+    #获取值为 user 的 Session 键值对，如果没有则返回空
+    username = request.session.get('username', '')
+    #获取参数 phone 的值（通过手机号输入框获取，点搜索后，url 会自动增加参数）
     search_phone = request.GET.get("phone", "")
-    guest_list = Guest.objects.filter(phone__contains=search_phone)
-    return render(request, "guest_manage.html", {"user": username, "guests": guest_list})
+    search_phone_bytes = search_phone.encode(encoding='utf-8')
+    guest_list = Guest.objects.filter(phone__contains=search_phone_bytes)
+
+    paginator = Paginator(guest_list, 10)
+    page = request.GET.get('page')
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        # page 若不是整数，取第一页面数据
+        contacts = paginator.page(1)
+    except EmptyPage:
+        #若 page 不在范围内，取最后一页面
+        page = paginator.page(paginator.num_pages)
+    return render(request, "guest_manage.html", {"user": username, "guests": contacts, "pyhone":search_phone})
 
 
 
