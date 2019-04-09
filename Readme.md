@@ -152,6 +152,18 @@ using: 用于加载模板使用的模板引擎的名称。
 
 8、 @login_required 此装饰器显限制某个视图函数必须登录才能访问，默认跳转的 URL 中会包含“/accounts/login/”，需要在 urls.py 中添加新的路径配置。
 
+9、Django 中 objects.all()、objects.get()、objects.filter() 的区别  
+   ·  all 返回的是QuerySet（查询集）对象，程序并没有真的在数据库中执行SQL语句查询数据，但支持迭代，使用for循环可以获取数据。  
+   ·  get(** kwargs) 返回的是Model对象，类型为列表，说明使用get方法会直接执行sql语句获取数据。
+   ·  filter(** kwargs) 和get类似，但支持更强大的查询功能
+
+10、request.session.get('user')  为了获取 sessionid ，用于认证用户
+
+11、Paginator(guest_list, 2)，Django提供了一个分页器类Paginator（django.core.paginator.Paginator)，可以很容易的实现分页的功能。该类有两个构造参数，一个是数据的集合，另一个是每页放多少条数据  
+分页器相关源码参考 ![分页器](https://docs.djangoproject.com/zh-hans/2.2/_modules/django/core/paginator/)
+
+
+
 #### templates 模板
 
 1、使用模板动态的生成 HTML
