@@ -43,7 +43,7 @@
   <!-- 发布会列表 -->
   <div class="row" style="padding-top: 80px;">
       <div class="col-md-6">
-          <table class="table table-stripde">
+          <table class="table table-striped">
               <thead>
                 <tr>
                   <th>id</th>
@@ -51,8 +51,8 @@
                   <th>状态</th>
                   <th>地址</th>
                   <th>时间</th>
-                  <!--th style="width: 45px;">签到</th -->
-                  <!-- th>签到正式</th -->
+                  <th>签到</th>
+                  <!-- th> style="width: 45px;"   签到正式</th -->
                 </tr>
               </thead>
               <tbody>
@@ -63,7 +63,7 @@
                       <td>{{ event.status }}</td>
                       <td>{{ event.address }}</td>
                       <td>{{ event.start_time }}</td>
-                      <!-- td><a href="/sign_index/{{ event.id }}/"  target="{{ event.id }}_blank">sign</a></td -->
+                      <td><a href="/sign_index/{{ event.id }}/" target="{{ event.id }}_blank">sign</a></td>
                       <!-- td><a href="/sign_index2/{{ event.id }}/"  target="{{ event.id }}_blank">sign_web</a></td -->
                   </tr>
                 {% endfor %}
