@@ -162,6 +162,8 @@ using: 用于加载模板使用的模板引擎的名称。
 11、Paginator(guest_list, 2)，Django提供了一个分页器类Paginator（django.core.paginator.Paginator)，可以很容易的实现分页的功能。该类有两个构造参数，一个是数据的集合，另一个是每页放多少条数据  
 分页器相关源码参考 ![分页器](https://docs.djangoproject.com/zh-hans/2.2/_modules/django/core/paginator/)
 
+12、table.objects.get()返回一个对象，而table.objects.filter()返回一个对象列表
+
 
 
 #### templates 模板
@@ -271,7 +273,8 @@ Out[24]: 1
 #### 其它
 
 1、创建 django_session 表,存放用户 sessionid 对应的信息  
-   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时生成 auth_user 表  
+   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时也会生成auth_user表，该表中存放的用户信息可以用来  
+   登录Django自带的Admin管理后台
    
 2、Django 自带 Admin 管理后台，创建登录 Admin 后台的超级管理员账号  
    命令：\guest> python manage.py createusperuser   
