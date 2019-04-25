@@ -92,20 +92,22 @@ def search_phone(request):
 
 #签到页面
 @login_required
-def sign_index(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    guest_list = Guest.objects.filter(event_id=event_id) #签到人数
-    sign_list = Guest.objects.filter(sign='1', event_id=event_id) #已签到人数
+def sign_index(request, eid):
+    event = get_object_or_404(Event, id=eid)
+    guest_list = Guest.objects.filter(event_id=eid) #签到人数
+    sign_list = Guest.objects.filter(sign="1", event_id=eid) #已签到人数
     guest_data = str(len(guest_list))
     sign_data = str(len(sign_list))
-    return render(request, 'sign_index.html', {'event': event, 'guest': guest_data, 'sign': sign_data})
+    return render(request, 'sign_index.html', {'event': event,
+                                               'guest': guest_data,
+                                               'sign': sign_data})
 
 
 #签到功能
 @login_required
-def sign_index_action(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    guest_list = Guest.objects.filter(event_id=event_id)
+def sign_index_action(request, eid):
+    event = get_object_or_404(Event, id=eid)
+    guest_list = Guest.objects.filter(event_id=eid)
     guest_data = str(len(guest_list))
     sign_data = 0 #计算发布会已签到数量
     for guest in guest_list:
@@ -117,24 +119,30 @@ def sign_index_action(request, event_id):
     #将包含 phong 的手机号都查询出来
     result = Guest.objects.filter(phone=phone)
     if not result:
-        return render(request, 'sign_index.html', {'event': event, 'hint': 'phone error.', 'guest': guest_data, 'sing': sign_data})
-
-    #通过手机号和 发布会 id 进行查询
-    result = Guest.objects.filter(phone=phone, event_id=event_id)
-    if not result:
-        return render(request, 'sign_index.html', {'event': event, 'hint': 'event id or phone error.',
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'phone error.',
                                                    'guest': guest_data,
                                                    'sing': sign_data})
 
-    result = Guest.objects.get(phone=phone, event_id=event_id)
+    #通过手机号和 发布会 id 进行查询
+    result = Guest.objects.filter(phone=phone, event_id=eid)
+    if not result:
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'event id or phone error.',
+                                                   'guest': guest_data,
+                                                   'sing': sign_data})
+
+    result = Guest.objects.get(phone=phone, event_id=eid)   #table.object.get() 获取返回的是一个对象
     if result.sign:
-        return render(request, 'sign_index.html', {'event': event, 'hint': 'user has sign in.',
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'user has sign in.',
                                                    'guest': guest_data,
                                                    'sing': sign_data})
     else:
-        Guest.objects.filter(phone=phone, event_id=event_id).update(sign='1')
-        return render(request, 'sign_index.html', {'event': event, 'hint':'sign in success!',
-                                                   'user':result,
+        Guest.objects.filter(phone=phone, event_id=eid).update(sign='1')
+        return render(request, 'sign_index.html', {'event': event,
+                                                   'hint': 'sign in success!',
+                                                   'user': result,
                                                    'guest': guest_data,
                                                    'sign': str(int(sign_data)+1)})
 
