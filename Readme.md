@@ -155,12 +155,27 @@ using: 用于加载模板使用的模板引擎的名称。
 9、Django 中 objects.all()、objects.get()、objects.filter() 的区别  
    ·  all 返回的是QuerySet（查询集）对象，程序并没有真的在数据库中执行SQL语句查询数据，但支持迭代，使用for循环可以获取数据。  
    ·  get(** kwargs) 返回的是Model对象，类型为列表，说明使用get方法会直接执行sql语句获取数据。
-   ·  filter(** kwargs) 和get类似，但支持更强大的查询功能
+   ·  filter(** kwargs) 和get类似，但支持更强大的查询功能，查询到的值唯一且不变。
 
 10、request.session.get('user')  为了获取 sessionid ，用于认证用户
 
 11、Paginator(guest_list, 2)，Django提供了一个分页器类Paginator（django.core.paginator.Paginator)，可以很容易的实现分页的功能。该类有两个构造参数，一个是数据的集合，另一个是每页放多少条数据  
 分页器相关源码参考 ![分页器](https://docs.djangoproject.com/zh-hans/2.2/_modules/django/core/paginator/)
+
+12、table.objects.get()返回一个对象，而table.objects.filter()返回一个对象列表
+
+13、get_object_or_404(klass, \*args, \*\*kwargs)  用特定查询条件获取某个对象，成功则返回该对象，否则引发一个 Http404  
+参数：
+· klass  接受一个 Model 类，Manager 或 QuerySet 实例，表示你要对该对象进行查询  
+· \*\*kwargs  查询条件，格式需要被 get() 和 filter() 接受  
+
+Django 文档解释  
+为什么我们使用辅助函数 get_object_or_404() 而不是自己捕获 ObjectDoesNotExist 异常呢？还有，为什么模型 API 不直接抛出 ObjectDoesNotExist 而是抛出 Http404 呢？
+
+因为这样做会增加模型层和视图层的耦合性。指导 Django 设计的最重要的思想之一就是要保证松散耦合。一些受控的耦合将会被包含在 django.shortcuts 模块中。
+
+14、
+
 
 
 
@@ -176,7 +191,9 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 
 4、 index.html 中{% csrf_token %},是CSRF令牌（跨站请求伪造），通过该令牌判断POST请求是否来自同一个网站，防止伪装提交请求的功能。
 
-5、 form 表单中的 action="/login_action" 指定了提交的路径，根据该路径去 urls.py 中匹配 URL 模式，再去 views.py 中执行相应的视图。
+5、 form 表单中的 action="/login_action" 指定了提交的路径,向服务器传递一个URL，根据该路径去 urls.py 中匹配 URL 模式，再去 views.py 中执行相应的视图。 浏览器访问的链接就是 http://127.0.0.1:8000/login_action
+
+6、
 
 
 #### models.py  
@@ -186,6 +203,7 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 · 模型的每个属性表示数据库的表字段
 · Django 把这一些已经给了一个自动生成的访问数据库的 API
 · 创建模型时，后台会在数据库自动生成一个 id 作为主键，这个主键可以被覆盖
+· 每一个模型类就对应数据库中的每一个表
 
 2、__str__()是被 print 函数调用的，__str__()返回的内容以字符串形式输出,该方法告诉 Python 如何将对象以 str 的方式显示出来。
 
@@ -202,6 +220,26 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 将对模型的改动作用到数据库文件，比如产生 table ，修改字段的类型等  
 注意：若更换数据库，数据库迁移前要保证在建模阶段，把相关字段都填写正确和规划完整，不然迁移过程会暴露许多问题。这里说的是数据库迁移，迁移执行的是同步表字段，在 MySQL 数据库中生成表，而数据是无法复制过去的，可能迁移后需要重新造数据，不然就提前导出数据，迁移完后再导入。
 
+
+#### 数据库
+1、在 django 中配置 mysql，在 setting.py 修改 DATABASES 就好
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'NAME': 'test',
+        'USER': 'root',
+        'PASSWORD': '',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
+
+    }
+}
+```
 
 
 #### Django shell
@@ -271,7 +309,8 @@ Out[24]: 1
 #### 其它
 
 1、创建 django_session 表,存放用户 sessionid 对应的信息  
-   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时生成 auth_user 表  
+   命令：\guest> python manage.py migrate  使用 “migrate” 进行数据迁移，Django 会同时也会生成auth_user表，该表中存放的用户信息可以用来  
+   登录Django自带的Admin管理后台
    
 2、Django 自带 Admin 管理后台，创建登录 Admin 后台的超级管理员账号  
    命令：\guest> python manage.py createusperuser   
@@ -283,6 +322,10 @@ Out[24]: 1
 1、当对手机号进行查询，若将手机号进行 encode ，则无法正常进行查询，且分页器按每页2条记录进行划分。  
 原因：查询手机号时，输入的数字，网页按照默认的编码格式将参数进行提交。后台获取该参数后，在进行一次 encode ,则无法与正确的手机号进行匹配，故  
 无法使用手机号成功查询，且分页器因为手机号无法正常匹配，也无法显示分页。
+
+2、在 sign_index() 方法 和 sign_index_action() 方法中，传入的第二个参数无法更换为其它值，如 event_id ，否则报错，  
+sign_index() got an unexpected keyword argument 'eid  将 event_id 换为 eid 后，传参变得正常。  
+在谷歌看了挺多资料，也看了相关源码，仍未找到该问题原因。猜测， eid 在这里作为一个位置参数，且名字不可更改。
  
 
 
