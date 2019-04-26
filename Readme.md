@@ -174,7 +174,7 @@ Django 文档解释
 
 因为这样做会增加模型层和视图层的耦合性。指导 Django 设计的最重要的思想之一就是要保证松散耦合。一些受控的耦合将会被包含在 django.shortcuts 模块中。
 
-14、
+
 
 
 
@@ -193,7 +193,6 @@ POST: 向指定的资源提交要被处理的数据，一般用于更新数据�
 
 5、 form 表单中的 action="/login_action" 指定了提交的路径,向服务器传递一个URL，根据该路径去 urls.py 中匹配 URL 模式，再去 views.py 中执行相应的视图。 浏览器访问的链接就是 http://127.0.0.1:8000/login_action
 
-6、
 
 
 #### models.py  
