@@ -32,4 +32,5 @@ urlpatterns = [
     re_path('sign_index/(?P<eid>[0-9]+)/', views.sign_index), #签到
     re_path('sign_index_action/(?P<eid>[0-9]+)/', views.sign_index_action),
     path('logout/', views.logout), #退出
+    path('api/', include('sign.urls', namespace="sign")), #接口根路径
 ]
