@@ -52,7 +52,7 @@ def search_name(request):
 @login_required
 def guest_manage(request):
     username = request.session.get('user', '')
-    guest_list = Guest.objects.all()   #.order_by('id')
+    guest_list = Guest.objects.all().order_by('id')
 
     paginator = Paginator(guest_list, 2)
     # get 请求获取当前要显示第几页数据
@@ -75,7 +75,7 @@ def search_phone(request):
     #获取参数 phone 的值（通过手机号输入框获取，点搜索后，url 会自动增加参数）
     search_phone = request.GET.get("phone", "")
     #search_phone_bytes = search_phone.encode(encoding="utf-8")
-    guest_list = Guest.objects.filter(phone__contains=search_phone)
+    guest_list = Guest.objects.filter(phone__contains=search_phone).order_by('phone')
 
     paginator = Paginator(guest_list, 10)
     #当前要显示第几页数据
