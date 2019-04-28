@@ -120,6 +120,42 @@ def add_guest(request):
 
 
 #嘉宾查询接口
+def get_guest_list(request):
+    eid = request.GET.get("eid", "")
+    phone = request.GET.get("phone", "")
+
+    if eid == '':
+        return JsonResponse({'status': 10021, 'message': 'eid cannot not be empty'})
+
+    if eid != '' and phone == '':
+        datas = []
+        results = Guest.objects.filter(event_id=eid)
+        if results:
+            for r in results:
+                guest = {}
+                guest['realname'] = r.realname
+                guest['phone'] = r.phone
+                guest['email'] = r.email
+                guest['sign'] = r.sign
+                datas.append(guest)
+            return JsonResponse({'status': 200, 'message':'success'})
+        else:
+            return JsonResponse({'status': 10022, 'message': 'query result is empty'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
