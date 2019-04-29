@@ -174,7 +174,7 @@ def use_sign(request):
 
     result = Guest.objects.filter(phone)
     if not result:
-        return JsonResponse({'status': 10025, 'message': 'user phone is not null'})
+        return JsonResponse({'status': 10025, 'message': 'user phone null'})
 
     result = Guest.objects.get(event_id=eid, phone=phone)
     if not result:
@@ -186,15 +186,6 @@ def use_sign(request):
     else:
         Guest.objects.get(event_id=eid, phone=phone).update(sign=1)
         return JsonResponse({'status': 200, 'message': 'sign in success'})
-
-
-
-
-
-
-
-
-
 
 
 
