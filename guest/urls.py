@@ -14,23 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
-from django.conf.urls import url
-from django.contrib import admin
-#导入 sign 应用 views 文件
+from django.urls import path, re_path, include
+# 导入 sign 应用 views 文件
 from sign import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.index), #添加index/ 路径配置
-    path('login_action/', views.login_action), #指定表单提交的路径
-    path('event_manage/', views.event_manage), #发布会管理页面
-    path('accounts/login/', views.index),      #登录
-    path('search_name/', views.search_name),   #发布会名称搜索
-    path('search_phone/', views.search_phone),  #嘉宾手机号搜索
-    path('guest_manage/', views.guest_manage), #嘉宾
-    re_path('sign_index/(?P<eid>[0-9]+)/', views.sign_index), #签到
+    path('index/', views.index),  # 添加index/ 路径配置
+    path('login_action/', views.login_action),  # 指定表单提交的路径
+    path('event_manage/', views.event_manage),  # 发布会管理页面
+    path('accounts/login/', views.index),  # 登录
+    path('search_name/', views.search_name),  # 发布会名称搜索
+    path('search_phone/', views.search_phone),  # 嘉宾手机号搜索
+    path('guest_manage/', views.guest_manage),  # 嘉宾
+    re_path('sign_index/(?P<eid>[0-9]+)/', views.sign_index),  # 签到
     re_path('sign_index_action/(?P<eid>[0-9]+)/', views.sign_index_action),
-    path('logout/', views.logout), #退出
-    path('api/', include('sign.urls', namespace="sign")), #接口根路径
+    path('logout/', views.logout),  # 退出
+    path('api/', include('sign.urls', namespace="sign")),  # 接口根路径
 ]

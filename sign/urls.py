@@ -1,6 +1,8 @@
-from django.conf.urls import url
+from django.urls import path
 from sign import views_if
 
+
+app_name = "sign"
 urlpatterns = [
     # sign system interface:
     # ex : /api/add_event/
