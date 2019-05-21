@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import Event, Guest
+
 from datetime import datetime
 from django.contrib.auth.models import User
 
@@ -15,17 +16,17 @@ class ModelTest(TestCase):
         Guest.objects.create(id=1, event_id=1, realname='alen', phone='13711001101',
                              email='alen@mail.com', sign=False)
 
-        def test_event_models(self):
-            # 测试发布会表
-            result = Event.objects.get(name='oneplus 3 event')
-            self.assertEqual(result.address, "beijing")
-            self.assertTrue(result.status)
+    def test_event_models(self):
+        # 测试发布会表
+        result = Event.objects.get(name='oneplus 3 event')
+        self.assertEqual(result.address, "beijing")
+        self.assertTrue(result.status)
 
-        def test_guest_models(self):
-            # 测试嘉宾表
-            result = Guest.objects.get(phone='13711001101')
-            self.assertEqual(result.realname, "alen")
-            self.assertFalse(result.sign)
+    def test_guest_models(self):
+        # 测试嘉宾表
+        result = Guest.objects.get(phone='13711001101')
+        self.assertEqual(result.realname, "alen")
+        self.assertFalse(result.sign)
 
 
 class IndexPageTest(TestCase):
