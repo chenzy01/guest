@@ -26,24 +26,7 @@
       </div>
   </nav>
 
-  <!-- 签到功能
-  <div class="page-header" style="padding-top: 80px;">
-      <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form" method="post" action="/sign_index_action/{{ event.id }}/">
-              <div class="form-group">
-                  <input name="phone" type="text" placeholder="输入手机号" class="form-control">
-              </div>
-              <button type="submit" class="btn btn-success">签到</button>
-              {% csrf_token %}
-              <font color="red">
-                  <br>{{ hint }} <!-- 显示签到成功或失败状态 -->
-                  <!-- br>{{ user.realname }}
-                  <br>{{ user.phone }}
-              </font>
-          </form>
-      </div>
-  </div>
--->
+  <div class="container theme-showcase" role="main">
 
 <!--签到表单-->
       <div class="row" style="margin-top:120px">
@@ -52,10 +35,10 @@
           <div class="input-group">
             <input type="text" class="form-control" placeholder="输入手机号" name="phone">
             <button type="submit" class="btn btn-success">签到</button><br>
-
+             {% csrf_token %}
             <font color="red">
-              <br>{{hint}}
-              <br>{{user.realname}}&nbsp&nbsp{{user.phone}}
+              <br>{{hint}} <!-- 显示签到状态 -->
+              <br>{{user.realname}}&nbsp&nbsp{{user.phone}} <!--从视图传递过来的 user 是一个对象列表 -->
             </font>
           </div><!-- /input-group -->
           </form>

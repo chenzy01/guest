@@ -1,5 +1,5 @@
 from django.test import TestCase
-from sign.models import Event, Guest
+from .models import Event, Guest
 from datetime import datetime
 from django.contrib.auth.models import User
 
@@ -55,14 +55,14 @@ class LoginActionTest(TestCase):
         test_data = {'username': '', 'password': ''}
         response = self.client.post('/login_action/', data=test_data)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"username or pasword error!", response.content)
+        self.assertIn(b"username or password error!", response.content)
 
     def test_login_action_username_password_error(self):
         # 用户名密码错误
         test_data = {'username': 'abc', 'password': '12345'}
         response = self.client.post('/login_action/', data=test_data)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b"username or pasword error!", response.content)
+        self.assertIn(b"username or password error!", response.content)
 
     def test_login_action_success(self):
         # 用户名密码为空
@@ -82,19 +82,19 @@ class EventManageTest(TestCase):
 
     def test_event_manage_success(self):
         # 测试发布会：xiaomi5
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/event_manage/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"xiaomi5", response.content)
-        self.assertIn(b"beijing", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/event_manage/')
+        self.assertEqual( self.response.status_code, 200)
+        self.assertIn(b"xiaomi5", self.response.content)
+        self.assertIn(b"beijing", self.response.content)
 
     def test_event_manage_search_success(self):
         # 测试发布会搜索
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/search_name/', {'name': 'xiaomi5'})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"xiaomi5", response.content)
-        self.assertIn(b"beijing", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/search_name/', {'name': 'xiaomi5'})
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn(b"xiaomi5", self.response.content)
+        self.assertIn(b"beijing", self.response.content)
 
 
 class GuestManageTest(TestCase):
@@ -110,20 +110,20 @@ class GuestManageTest(TestCase):
 
     def test_event_manage_success(self):
         # 测试嘉宾信息：alen
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/guest_manage/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"alen", response.content)
-        self.assertIn(b"18611001100", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/guest_manage/')
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn(b"alen", self.response.content)
+        self.assertIn(b"18611001100", self.response.content)
 
     def test_guest_manage_search_success(self):
         # 测试嘉宾搜索
 
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/search_phone/', {"phone": "18611001100"})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"alen", response.content)
-        self.assertIn(b"18611001100", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/search_phone/', {"phone": "18611001100"})
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn(b"alen", self.response.content)
+        self.assertIn(b"18611001100", self.response.content)
 
 
 class SignIndexActionTest(TestCase):
@@ -142,28 +142,28 @@ class SignIndexActionTest(TestCase):
 
     def test_sign_index_action_phone_null(self):
         # 手机号为空
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/sign_index_action/1/', {"phone": ""})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"phone error", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/sign_index_action/1/', {"phone": ""})
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn(b"phone error", self.response.content)
 
     def test_sign_index_action_phone_or_event_id_error(self):
         # 手机号或发布会 id 错误
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/sign_index_action/2/', {"phone": "18611001100"})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"event id or phone error", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/sign_index_action/2/', {"phone": "18611001100"})
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn(b"event id or phone error", self.response.content)
 
     def test_sign_index_action_user_sign_has(self):
         # 用户已签到
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/sign_index_action/2/', {"phone": "18611001101"})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"user has sign in", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/sign_index_action/2/', {"phone": "18611001101"})
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn(b"user has sign in", self.response.content)
 
     def test_sign_index_action_user_sign_success(self):
         # 签到成功
-        response = self.client.post('/login_action/', data=self.login_user)
-        response = self.client.post('/sign_index_action/1/', {"phone": "18611001100"})
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"sign in success!", response.content)
+        self.response = self.client.post('/login_action/', data=self.login_user)
+        self.response = self.client.post('/sign_index_action/1/', {"phone": "18611001100"})
+        self.assertEqual(self.response.status_code, 200)
+        self.assertIn(b"sign in success!", self.response.content)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from sign.models import Event, Guest
+from .models import Event, Guest
 
 
 # Register your models here.让界面显示更多的字段
