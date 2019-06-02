@@ -23,6 +23,6 @@ urlpatterns = [
     # ex : /api/sec_add_event_list/
     path('sec_add_event/', views_if_sec.add_event, name='add_event'),
     # ex : /api/sec_get_guest_list/
-    path('sec_get_guest_list', views_if_sec.get_guest_list, name='get_guest_list')
+    path('sec_get_guest_list/', views_if_sec.get_guest_list, name='get_guest_list')
 
 ]
