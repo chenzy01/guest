@@ -110,6 +110,7 @@ def user_sign(request):
     else:
         return "sign success"
 
+
 # 添加发布会接口，增加签名+时间戳
 def add_event(request):
     sign_result = user_sign(request)

@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from sign.models import Event, Guest
+from guest.sign.models import Event, Guest
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 import time
@@ -65,12 +65,8 @@ def get_event_list(request):
         results = Event.objects.filter(name__contains=name)
         if results:
             for r in results:
-                event = {}
-                event['name'] = r.name
-                event['limit'] = r.limit
-                event['status'] = r.status
-                event['address'] = r.address
-                event['start_time'] = r.start_time
+                event = {'name': r.name, 'limit': r.limit, 'status': r.status, 'address': r.address,
+                         'start_time': r.start_time}
                 datas.append(event)
             return JsonResponse({'status': 200, 'message': 'success', 'data': datas})
         else:
@@ -133,11 +129,7 @@ def get_guest_list(request):
         results = Guest.objects.filter(event_id=eid)
         if results:
             for r in results:
-                guest = {}
-                guest['realname'] = r.realname
-                guest['phone'] = r.phone
-                guest['email'] = r.email
-                guest['sign'] = r.sign
+                guest = {'realname': r.realname, 'phone': r.phone, 'email': r.email, 'sign': r.sign}
                 datas.append(guest)
             return JsonResponse({'status': 200, 'message': 'success'})
         else:
