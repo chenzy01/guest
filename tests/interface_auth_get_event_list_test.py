@@ -28,7 +28,7 @@ class GetEventListTest(unittest.TestCase):
         auth_user = ('admin', 'admin123456')
         r = requests.get(self.base_url, auth=auth_user, params={'eid': ''})
         result = r.json()
-        self.assertEqual(result['satatus'], 10021)
+        self.assertEqual(result['status'], 10021)
         self.assertEqual(result['message'], 'parameter error')
 
     def test_get_event_list_eid_success(self):

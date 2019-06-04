@@ -1,9 +1,12 @@
-from django.contrib import auth as django_auth
 import base64
+import hashlib
+import time
+
+from django.contrib import auth as django_auth
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import JsonResponse
+
 from guest.sign.models import Event
-import time, hashlib
 
 """
 为接口参加安全机制：认证、签名、AES加密
